@@ -5,6 +5,7 @@ const router = express.Router();
 const Joi = require('joi');
 const { insertPersonalInfo, getPersonalInfo } = require('../db/personalInfo');
 
+
 // Validation Schemas
 const personalInfoSchema = Joi.object({
   userId: Joi.number().integer().positive().required(),
