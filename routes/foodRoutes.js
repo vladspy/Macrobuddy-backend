@@ -22,17 +22,16 @@ router.get('/search', async (req, res) => {
 
         // Construct the URL with properly encoded parameters
         const params = new URLSearchParams({
-            query: encodeURIComponent(query),
+            query,
             pageSize: 1,
             api_key: USDA_API_KEY
         });
 
-        // Append dataType separately to ensure proper encoding
-        params.append('dataType', 'Survey FNDDS');
+        // Append `dataType` correctly without `[]` and avoid parentheses
+params.append('dataType', 'Survey%20FNDDS'); // Use encoded space instead of parentheses
 
-        const url = `${USDA_API_BASE}?${params.toString()}`;
-        console.log(`🌐 Request URL: ${url}`); // Debugging log
-
+const url = `${USDA_API_BASE}?${params.toString()}`;
+console.log(`🌐 Request URL: ${url}`); // Debugging log
         // Make a request to the USDA API
         const response = await axios.get(url);
 
