@@ -20,21 +20,19 @@ router.get('/search', async (req, res) => {
 
         console.log(`🔍 Searching USDA API for: ${query}`); // Debugging log
 
-        // Make a request to the USDA API
-        const response = await axios.get(USDA_API_BASE, {
-            params: {
-                query,
-                dataType: 'Survey (FNDDS)', // Send as a single string
-                pageSize: 1, // Limit results to 1 item
-                api_key: USDA_API_KEY
-            },
-            paramsSerializer: (params) => {
-                // Manually encode the `dataType` parameter
-                return Object.keys(params)
-                    .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`)
-                    .join('&');
-            }
+        // Construct the URL with properly encoded parameters
+        const params = new URLSearchParams({
+            query,
+            dataType: 'Survey (FNDDS)', // Send as a single string
+            pageSize: 1, // Limit results to 1 item
+            api_key: USDA_API_KEY
         });
+
+        const url = `${USDA_API_BASE}?${params.toString()}`;
+        console.log(`🌐 Request URL: ${url}`); // Debugging log
+
+        // Make a request to the USDA API
+        const response = await axios.get(url);
 
         console.log('✅ USDA API response received!'); // Debugging log
 
