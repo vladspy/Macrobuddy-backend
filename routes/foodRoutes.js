@@ -20,11 +20,14 @@ router.get('/search', async (req, res) => {
 
         console.log(`🔍 Searching USDA API for: ${query}`); // Debugging log
 
+        // Manually encode the dataType parameter
+        const encodedDataType = encodeURIComponent('Survey (FNDDS)');
+
         // Make a request to the USDA API
         const response = await axios.get(USDA_API_BASE, {
             params: {
                 query,
-                dataType: ['Survey (FNDDS)'], // Filter for standardized food data
+                dataType: encodedDataType, // Use the encoded value
                 pageSize: 1, // Limit results to 1 item
                 api_key: USDA_API_KEY
             }
