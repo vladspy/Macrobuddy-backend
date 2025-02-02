@@ -2,7 +2,7 @@ const express = require('express');
 const axios = require('axios');
 const router = express.Router();
 
-const USDA_API_KEY = '43SJpLG8iVMBYI7vCelwHdK8up9kRSMYiubpMYMB';
+const USDA_API_KEY = '43SJpLG8iVMBYI7vCelwHdK8up9kRSMYiubpMYMB'; // Replace with your USDA API key
 const USDA_API_BASE = 'https://api.nal.usda.gov/fdc/v1/foods/search';
 
 /**
@@ -12,36 +12,45 @@ const USDA_API_BASE = 'https://api.nal.usda.gov/fdc/v1/foods/search';
 router.get('/search', async (req, res) => {
     try {
         const { query } = req.query;
+
+        // Validate the query parameter
         if (!query) {
             return res.status(400).json({ error: 'Query parameter is required' });
         }
 
-        console.log(`🔍 Searching USDA API for: ${query}`);  // Debugging log
+        console.log(`🔍 Searching USDA API for: ${query}`); // Debugging log
 
+        // Make a request to the USDA API
         const response = await axios.get(USDA_API_BASE, {
             params: {
                 query,
-                dataType: ['Survey (FNDDS)'],
-                pageSize: 1,
+                dataType: ['Survey (FNDDS)'], // Filter for standardized food data
+                pageSize: 1, // Limit results to 1 item
                 api_key: USDA_API_KEY
             }
         });
 
-        console.log(`✅ USDA API response received!`);  // Debugging log
+        console.log('✅ USDA API response received!'); // Debugging log
 
+        // Check if the response contains food data
         if (!response.data.foods || response.data.foods.length === 0) {
             return res.status(404).json({ error: 'No relevant match found' });
         }
 
+        // Extract the first food item from the response
         const foodItem = response.data.foods[0];
+
+        // Extract macronutrients from the food item
         const macronutrients = extractMacronutrients(foodItem);
 
+        // Send the response with the food name and macronutrients
         res.json({
             product_name: foodItem.description,
             ...macronutrients
         });
 
     } catch (error) {
+        // Log the error and send a 500 response
         console.error(`❌ Error fetching USDA food data:`, error.response?.data || error.message);
         res.status(500).json({ error: 'Failed to retrieve food data' });
     }
@@ -58,8 +67,12 @@ function extractMacronutrients(foodItem) {
         fats: 0
     };
 
-    if (!foodItem.foodNutrients) return macronutrients;
+    // Check if the food item has nutrient data
+    if (!foodItem.foodNutrients) {
+        return macronutrients;
+    }
 
+    // Loop through the nutrients and extract macronutrient values
     foodItem.foodNutrients.forEach(nutrient => {
         switch (nutrient.nutrientName) {
             case 'Energy':
