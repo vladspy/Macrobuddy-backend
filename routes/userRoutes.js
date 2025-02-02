@@ -21,21 +21,20 @@ router.post('/addUser', async (req, res) => {
   
 router.post('/verifyUser', async (req, res) => {
   try {
-    const { email, password } = req.body;
-    const result = await verifyUser(email, password);
+      const { username, password } = req.body;
+      const result = await verifyUser(username, password);
 
-    if (result.success) {
-      res.status(201).json({ message: 'User verified successfully!' });
-    } else if (result.error === 'User not found!') {
-      res.status(404).json({ error: result.error });
-    } else if (result.error === 'Invalid email or password.') {
-      res.status(401).json({ error: result.error });
-    } else {
-      res.status(500).json({ error: 'Unknown error occurred.' });
-    }
+      if (result.success) {
+          // Create session or token
+          req.session.user = { id: result.userId, username };
+          res.cookie('sessionID', req.sessionID, { httpOnly: true });
+          res.status(201).json({ success: true, message: 'User verified successfully!' });
+      } else {
+          res.status(401).json({ error: 'Invalid username or password.' });
+      }
   } catch (error) {
-    console.error('Error verifying user:', error.message);
-    res.status(500).json({ error: 'Internal server error' });
+      console.error('Error verifying user:', error.message);
+      res.status(500).json({ error: 'Internal server error' });
   }
 });
 
