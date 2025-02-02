@@ -16,9 +16,9 @@ app.use(express.static(path.join(__dirname, 'frontend')));
 
 // Middleware
 app.use(cors({
-    origin: '*',  // Allows access from any IP (Use caution in production)
-    methods: ['GET', 'POST'],
-    allowedHeaders: ['Content-Type']
+  origin: "*", // Change this to your frontend URL for security
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"]
 }));
 app.use(express.json());
 app.use(bodyParser.json());
