@@ -21,14 +21,14 @@ router.post('/addUser', async (req, res) => {
   
 router.post('/verifyUser', async (req, res) => {
   try {
-    const { username, password } = req.body;
-    const result = await verifyUser(username, password);
+    const { email, password } = req.body;
+    const result = await verifyUser(email, password);
 
     if (result.success) {
       res.status(201).json({ message: 'User verified successfully!' });
     } else if (result.error === 'User not found!') {
       res.status(404).json({ error: result.error });
-    } else if (result.error === 'Invalid username or password.') {
+    } else if (result.error === 'Invalid email or password.') {
       res.status(401).json({ error: result.error });
     } else {
       res.status(500).json({ error: 'Unknown error occurred.' });
@@ -38,5 +38,8 @@ router.post('/verifyUser', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+
+module.exports = router;
+
   
 module.exports = router;

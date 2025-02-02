@@ -84,25 +84,29 @@ const verifyPassword = async (storedHash, inputPassword) => {
       return { success: false, error: 'Internal server error' };
     }
   };*/
-  const verifyUser      = async (username, password) => {
+  const verifyUser = async (email, password) => {
     try {
-        const connection = await connectDB();
-        const [rows] = await connection.execute('SELECT * FROM user WHERE username = ?', [username]);
-        if (rows.length === 0) {
-          return { success: false, error: 'User not found!' };
-        }
-        const storedHash = rows[0].hashed_password;
-        const isValid = await verifyPassword(storedHash, password);
-        if (isValid) {
-          return { success: true, message: 'User verified successfully!' };
-        } else {
-          return { success: false, error: 'Invalid username or password.' };
-        }
+      const connection = await connectDB();
+      const [rows] = await connection.execute('SELECT * FROM user WHERE email = ?', [email]);
+  
+      if (rows.length === 0) {
+        return { success: false, error: 'User not found!' };
+      }
+  
+      const storedHash = rows[0].hashed_password;
+      const isValid = await verifyPassword(storedHash, password);
+  
+      if (isValid) {
+        return { success: true, message: 'User verified successfully!' };
+      } else {
+        return { success: false, error: 'Invalid email or password.' };
+      }
     } catch (error) {
       console.error('Error verifying user:', error.message);
       return { success: false, error: 'Internal server error' };
     }
   };
+  
 
 
 
