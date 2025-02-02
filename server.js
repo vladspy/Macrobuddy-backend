@@ -10,14 +10,15 @@ const macrosRoutes = require('./routes/macrosRoutes');
 const PIRoutes = require('./routes/PIRoutes');
 
 const app = express();
-const PORT = process.env.PORT; // Use environment variable for port
+const PORT = process.env.PORT|| 3000; // Use environment variable for port
 app.use(express.static(path.join(__dirname, 'frontend')));
 
 // Middleware
+const cors = require('cors');
 app.use(cors({
-  origin: 'http://127.0.0.1:5500', // Allow requests from this origin
-  methods: ['GET', 'POST'],
-  allowedHeaders: ['Content-Type']
+    origin: '*',  // Allows access from any IP (Use caution in production)
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['Content-Type']
 }));
 app.use(express.json());
 app.use(bodyParser.json());
@@ -34,7 +35,7 @@ app.get('/', (req, res) => {
 });
 
 // Start server
-app.listen(PORT, 'localhost', () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server running on http://${process.env.PUBLIC_IP || 'your-server-ip'}:${PORT}`);
 });
 module.exports = app;
