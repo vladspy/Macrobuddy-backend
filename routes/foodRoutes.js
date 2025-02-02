@@ -22,7 +22,7 @@ router.get('/search', async (req, res) => {
 
         // Construct the URL with properly encoded parameters
         const params = new URLSearchParams({
-            query,
+            query: encodeURIComponent(query),
             pageSize: 1,
             api_key: USDA_API_KEY
         });
