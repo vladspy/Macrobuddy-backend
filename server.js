@@ -8,13 +8,13 @@ const cors = require('cors'); // Import CORS
 const userRoutes = require('./routes/userRoutes');
 const macrosRoutes = require('./routes/macrosRoutes');
 const PIRoutes = require('./routes/PIRoutes');
+const foodRoutes = require('./routes/foodRoutes');
 
 const app = express();
 const PORT = process.env.PORT|| 3000; // Use environment variable for port
 app.use(express.static(path.join(__dirname, 'frontend')));
 
 // Middleware
-const cors = require('cors');
 app.use(cors({
     origin: '*',  // Allows access from any IP (Use caution in production)
     methods: ['GET', 'POST'],
@@ -27,6 +27,7 @@ app.use(bodyParser.json());
 app.use('/api/users', userRoutes);
 app.use('/api/macros', macrosRoutes);
 app.use('/api/personal-info', PIRoutes);
+app.use('/api/food', foodRoutes);
 console.log("Personal Info Routes loaded!");
 
 // Default route
@@ -36,6 +37,6 @@ app.get('/', (req, res) => {
 
 // Start server
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Server running on http://${process.env.PUBLIC_IP || 'your-server-ip'}:${PORT}`);
+  console.log(`Server running on http://0.0.0.0:${PORT}`);
 });
 module.exports = app;
