@@ -28,7 +28,7 @@ router.get('/search', async (req, res) => {
         });
 
         // Append `dataType` correctly with encoding
-        params.append('dataType', encodeURIComponent('Survey (FNDDS)'));
+        params.append('dataType', encodeURIComponent('Survey%20(FNDDS)'));
 
         const url = `${USDA_API_BASE}?${params.toString()}`;
         console.log(`🌐 Request URL: ${url}`); // Debugging log
