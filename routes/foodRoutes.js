@@ -18,26 +18,32 @@ router.get('/search', async (req, res) => {
             return res.status(400).json({ error: 'Query parameter is required' });
         }
 
-        console.log(`🔍 Searching USDA API for: ${query}`); // Debugging log
+        console.log(`🔍 Searching USDA API for: ${query}`);
 
         // Construct the URL with properly encoded parameters
         const params = new URLSearchParams({
-            query,
+            query,       // e.g. "banana"
             pageSize: 1,
             api_key: USDA_API_KEY
         });
 
-        // Append `dataType` correctly with encoding
-        params.append('dataType', encodeURIComponent('Survey%20(FNDDS)'));
+        // Use set() instead of append() to ensure only one dataType (no brackets, no duplicates)
+        params.set('dataType', 'Survey (FNDDS)');
 
-        const url = `${USDA_API_BASE}?${params.toString()}`;
-        console.log(`🌐 Request URL: ${url}`); // Debugging log
+        // Convert params to string, then encode parentheses manually
+        let paramString = params.toString();
+        paramString = paramString
+          .replace(/\(/g, '%28') // encode '('
+          .replace(/\)/g, '%29'); // encode ')'
 
+        // Construct the final URL
+        const url = `${USDA_API_BASE}?${paramString}`;
         console.log(`🧐 Final USDA API URL: ${url}`);
+
         // Make a request to the USDA API
         const response = await axios.get(url);
 
-        console.log('✅ USDA API response received!'); // Debugging log
+        console.log('✅ USDA API response received!');
 
         // Check if the response contains food data
         if (!response.data.foods || response.data.foods.length === 0) {
