@@ -23,14 +23,17 @@ router.get('/search', async (req, res) => {
         // Construct the URL with properly encoded parameters
         const params = new URLSearchParams({
             query,
-            dataType: 'Survey (FNDDS)', // Send as a single string
-            pageSize: 1, // Limit results to 1 item
+            pageSize: 1,
             api_key: USDA_API_KEY
         });
+
+        // Append `dataType` correctly with encoding
+        params.append('dataType', encodeURIComponent('Survey (FNDDS)'));
 
         const url = `${USDA_API_BASE}?${params.toString()}`;
         console.log(`🌐 Request URL: ${url}`); // Debugging log
 
+        console.log(`🧐 Final USDA API URL: ${url}`);
         // Make a request to the USDA API
         const response = await axios.get(url);
 
@@ -52,7 +55,6 @@ router.get('/search', async (req, res) => {
             product_name: foodItem.description,
             ...macronutrients
         });
-
     } catch (error) {
         // Log the error and send a 500 response
         console.error(`❌ Error fetching USDA food data:`, error.response?.data || error.message);
