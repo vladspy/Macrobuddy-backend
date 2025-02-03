@@ -29,6 +29,7 @@ app.use('/api/macros', macrosRoutes);
 app.use('/api/personal-info', PIRoutes);
 app.use('/api/food', foodRoutes);
 console.log("Personal Info Routes loaded!");
+console.log('✅ Running the UPDATED server.js file!');
 
 // Default route
 app.get('/', (req, res) => {
