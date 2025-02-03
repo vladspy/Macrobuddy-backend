@@ -27,8 +27,8 @@ router.get('/search', async (req, res) => {
             api_key: USDA_API_KEY
         });
 
-        // Append `dataType` correctly with parentheses
-        params.append('dataType', 'Survey%20(FNDDS)');
+        // Append `dataType` correctly with encoding
+        params.append('dataType', encodeURIComponent('Survey (FNDDS)'));
 
         const url = `${USDA_API_BASE}?${params.toString()}`;
         console.log(`🌐 Request URL: ${url}`); // Debugging log
